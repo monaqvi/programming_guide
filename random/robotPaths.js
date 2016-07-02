@@ -82,24 +82,21 @@ var robotPaths = function(n) {
 // Slower but more terse code
 
 var robotPaths = function(n, board, i, j) {
-  if (n === undefined || n <= 0) return null;
   board = board || makeBoard(n),
   i = i || 0,
   j = j || 0;
 
+  // If current cell has been visited on this path or doesn't exist, can't go there, so do nothing (no need to return since there are no more recursive calls below this)
+  if (!board.viablePosition(i, j)) return 0;
   // If reached the end, add to numPaths and stop recursing
   if (i === (n - 1) && j === (n - 1)) return 1;
-  // If current cell has been visited on this path or doesn't exist, can't go there, so do nothing (no need to return since there are no more recursive calls below this)
-  if (board.viablePosition(i, j)) {
-    // Mark current cell as having been visited for this path
-    board.togglePiece(i, j);
-    // Check each of the four possible directions
-    var numPaths = robotPaths(n, board, i + 1, j) + robotPaths(n, board, i - 1, j) + robotPaths(n, board, i, j + 1) + robotPaths(n, board, i, j - 1);
-    // Reset current cell so other paths can go there (since board is a pointer to an array that every path is accessing)
-    board.togglePiece(i, j);
-    return numPaths;
-  }
-  return 0;
+  // Mark current cell as having been visited for this path
+  board.togglePiece(i, j);
+  // Check each of the four possible directions
+  var numPaths = robotPaths(n, board, i + 1, j) + robotPaths(n, board, i - 1, j) + robotPaths(n, board, i, j + 1) + robotPaths(n, board, i, j - 1);
+  // Reset current cell so other paths can go there (since board is a pointer to an array that every path is accessing)
+  board.togglePiece(i, j);
+  return numPaths;
 }
 
 console.log(robotPaths(6));
